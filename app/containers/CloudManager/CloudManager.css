@@ -1,0 +1,4 @@
+.container {
+  width: calc(50% - 1px);
+  height: 100%;
+}

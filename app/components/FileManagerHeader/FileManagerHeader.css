@@ -1,0 +1,33 @@
+.container {
+  height: 45px;
+  width: calc(100% - 8px);
+  background-color: #334;
+  border-bottom: 1px solid #555;
+  color: #ccc;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 8px;
+}
+
+.buttons img {
+  width: 22px;
+  height: 22px;
+  background-color: #556;
+  padding: 4px;
+  margin-bottom: -4px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: ease 0.1s;
+  object-fit: contain;
+  margin-right: 8px;
+}
+
+.buttons img:hover {
+  background-color: #667;
+}
+
+.buttons img:active {
+  background-color: #334;
+}

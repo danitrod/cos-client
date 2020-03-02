@@ -1,10 +1,17 @@
 import React from 'react';
+import FileManager from './FileManager/FileManager';
+import CloudManager from './CloudManager/CloudManager';
+import AppHeader from '../components/AppHeader/AppHeader';
 
 const App = () => {
   return (
-    <div>
-      <h1>Hello World</h1>
-    </div>
+    <>
+      <AppHeader />
+      <div className="content">
+        <FileManager />
+        <CloudManager />
+      </div>
+    </>
   );
 };
 
