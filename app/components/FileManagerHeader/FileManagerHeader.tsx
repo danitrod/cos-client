@@ -9,6 +9,8 @@ import CloudUploadIcon from '../../images/icons/cloud-upload.png';
 const FileManagerHeader = () => {
   const dispatch = useDispatch();
 
+  const uploadItem = () => {};
+
   return (
     <div className={styles.container}>
       <div className={styles.buttons}>
@@ -18,7 +20,8 @@ const FileManagerHeader = () => {
           onClick={() => dispatch(navigateBack())}
           alt="Back"
         />
-        <img src={CloudUploadIcon} alt="Upload" />
+        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+        <img src={CloudUploadIcon} alt="Upload" onClick={uploadItem} />
       </div>
     </div>
   );

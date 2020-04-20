@@ -3,17 +3,17 @@ import { readdir, lstatSync } from 'fs';
 import { join } from 'path';
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { navigateToDirectory } from '../../actions/fileExplorer';
+import { selectFile, navigateToDirectory } from '../../actions/fileExplorer';
 import styles from './LocalBrowser.css';
 import FolderIcon from '../../images/icons/folder.svg';
 import FileIcon from '../../images/icons/file.png';
 
 const LocalBrowser = () => {
-  const currentPath = useSelector(state => state.fileExplorer);
+  const currentPath = useSelector(state => state.fileExplorer.dir);
   const dispatch = useDispatch();
   const [dirContent, setDirContent] = useState();
   const [clickTime, setClickTime] = useState(0);
-  const [selectedFile, setSelectedFile] = useState();
+  const selectedFile = useSelector(state => state.fileExplorer.selectedFile);
 
   useEffect(() => {
     readdir(currentPath, async (_, files) => {
@@ -23,7 +23,7 @@ const LocalBrowser = () => {
           const file = {
             name,
             path,
-            dir: await lstatSync(path).isDirectory()
+            isDir: await lstatSync(path).isDirectory()
           };
           return file;
         });
@@ -35,7 +35,7 @@ const LocalBrowser = () => {
   }, [currentPath]);
 
   const fileDoubleClicked = async file => {
-    if (file.dir === true) {
+    if (file.isDir === true) {
       dispatch(navigateToDirectory(file.path));
     }
   };
@@ -43,15 +43,16 @@ const LocalBrowser = () => {
   const fileClicked = file => {
     if (
       clickTime &&
-      file.name === selectedFile &&
+      selectedFile &&
+      file.name === selectedFile.name &&
       Date.now() - clickTime <= 300
     ) {
       fileDoubleClicked(file);
-    } else if (file.name === selectedFile) {
-      setSelectedFile(null);
+    } else if (selectedFile && file.name === selectedFile.name) {
+      dispatch(selectFile(null));
     } else {
       setClickTime(Date.now());
-      setSelectedFile(file.name);
+      dispatch(selectFile(file));
     }
   };
 
@@ -64,7 +65,7 @@ const LocalBrowser = () => {
             const style = [
               index % 2 === 0 ? styles.browserItem1 : styles.browserItem2
             ];
-            if (file.name === selectedFile) {
+            if (selectedFile && file.name === selectedFile.name) {
               style.push(styles.selectedItem);
             }
             return (
@@ -75,7 +76,7 @@ const LocalBrowser = () => {
                 className={style.reduce((p, n) => `${p} ${n}`)}
               >
                 <img
-                  src={file.dir ? FolderIcon : FileIcon}
+                  src={file.isDir ? FolderIcon : FileIcon}
                   className={styles.icon}
                   alt="icon"
                 />

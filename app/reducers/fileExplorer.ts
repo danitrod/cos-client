@@ -1,22 +1,31 @@
 import { Action } from 'redux';
 import { homedir } from 'os';
 import { dirname } from 'path';
-import { NAVIGATE_TO_DIRECTORY, NAVIGATE_BACK } from '../actions/fileExplorer';
+import {
+  SELECT_FILE,
+  NAVIGATE_TO_DIRECTORY,
+  NAVIGATE_BACK
+} from '../actions/fileExplorer';
 
-const initialDir = homedir();
+const initialState = {
+  selectedFile: null,
+  dir: homedir()
+};
 
-const reducer = (currentDir = initialDir, action: Action<string>) => {
+const reducer = (state = initialState, action: Action<string>) => {
   switch (action.type) {
+    case SELECT_FILE:
+      return { ...state, selectedFile: action.file };
     case NAVIGATE_TO_DIRECTORY:
-      return action.dir;
+      return { ...state, dir: action.dir };
     case NAVIGATE_BACK: {
-      if (currentDir === initialDir) {
-        return currentDir;
+      if (state.dir === initialState.dir) {
+        return state;
       }
-      return dirname(currentDir);
+      return { ...state, dir: dirname(state.dir) };
     }
     default:
-      return currentDir;
+      return state;
   }
 };
 
